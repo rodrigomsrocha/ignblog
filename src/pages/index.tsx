@@ -57,32 +57,38 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       <Head>
         <title>ignblog | Home</title>
       </Head>
-      <div className={`${commonStyles.container} ${styles.home}`}>
-        {posts.map(post => (
-          <Link href={`post/${post.uid}`} key={post.uid}>
-            <a className={styles.post}>
-              <h1>{post.data.title}</h1>
-              <p>{post.data.subtitle}</p>
-              <div className={styles.postInformation}>
-                <span>
-                  <AiOutlineCalendar size={20} color="#bbb" />
-                  {format(new Date(post.first_publication_date), 'dd MMM yyy', {
-                    locale: ptBR,
-                  })}
-                </span>
-                <span>
-                  <FiUser size={20} color="#bbb" />
-                  {post.data.author}
-                </span>
-              </div>
-            </a>
-          </Link>
-        ))}
-        {nextPage && (
-          <button onClick={handleLoadMorePosts} type="button">
-            Carregar mais posts
-          </button>
-        )}
+      <div className={commonStyles.container}>
+        <section className={styles.home}>
+          {posts.map(post => (
+            <Link href={`post/${post.uid}`} key={post.uid}>
+              <a className={styles.post}>
+                <h1>{post.data.title}</h1>
+                <p>{post.data.subtitle}</p>
+                <div className={styles.postInformation}>
+                  <span>
+                    <AiOutlineCalendar size={20} color="#bbb" />
+                    {format(
+                      new Date(post.first_publication_date),
+                      'dd MMM yyy',
+                      {
+                        locale: ptBR,
+                      }
+                    )}
+                  </span>
+                  <span>
+                    <FiUser size={20} color="#bbb" />
+                    {post.data.author}
+                  </span>
+                </div>
+              </a>
+            </Link>
+          ))}
+          {nextPage && (
+            <button onClick={handleLoadMorePosts} type="button">
+              Carregar mais posts
+            </button>
+          )}
+        </section>
       </div>
     </>
   );
