@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next';
+import Link from 'next/link';
 import { useState } from 'react';
 import Head from 'next/head';
 import Prismic from '@prismicio/client';
@@ -58,24 +59,28 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       </Head>
       <div className={`${commonStyles.container} ${styles.home}`}>
         {posts.map(post => (
-          <a key={post.uid} className={styles.post}>
-            <h1>{post.data.title}</h1>
-            <p>{post.data.subtitle}</p>
-            <div className={styles.postInformation}>
-              <span>
-                <AiOutlineCalendar />
-                {post.first_publication_date}
-              </span>
-              <span>
-                <FiUser />
-                {post.data.author}
-              </span>
-            </div>
-          </a>
+          <Link href={`post/${post.uid}`} key={post.uid}>
+            <a className={styles.post}>
+              <h1>{post.data.title}</h1>
+              <p>{post.data.subtitle}</p>
+              <div className={styles.postInformation}>
+                <span>
+                  <AiOutlineCalendar size={20} color="#bbb" />
+                  {format(new Date(post.first_publication_date), 'dd MMM yyy', {
+                    locale: ptBR,
+                  })}
+                </span>
+                <span>
+                  <FiUser size={20} color="#bbb" />
+                  {post.data.author}
+                </span>
+              </div>
+            </a>
+          </Link>
         ))}
         {nextPage && (
           <button onClick={handleLoadMorePosts} type="button">
-            Carregar mais posts.
+            Carregar mais posts
           </button>
         )}
       </div>
@@ -93,13 +98,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const posts = postsResponse.results.map(post => {
     return {
       uid: post.uid,
-      first_publication_date: format(
-        new Date(post.first_publication_date),
-        'dd MMM yyy',
-        {
-          locale: ptBR,
-        }
-      ),
+      first_publication_date: post.first_publication_date,
       data: {
         title: post.data.title,
         subtitle: post.data.subtitle,
