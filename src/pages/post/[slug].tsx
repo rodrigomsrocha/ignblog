@@ -35,6 +35,10 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps): JSX.Element {
+  const router = useRouter();
+  if (router.isFallback) {
+    return <p>Carregando...</p>;
+  }
   const readTime =
     post.data.content.reduce(
       (acc, act) => {
@@ -47,11 +51,6 @@ export default function Post({ post }: PostProps): JSX.Element {
         total: 0,
       }
     ).total / 200;
-
-  const router = useRouter();
-  if (router.isFallback) {
-    return <p>Carregando...</p>;
-  }
 
   return (
     <>
@@ -98,7 +97,7 @@ export default function Post({ post }: PostProps): JSX.Element {
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async context => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient();
   const posts = await prismic.query(
     Prismic.Predicates.at('document.type', 'post')
