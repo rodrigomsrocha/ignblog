@@ -36,13 +36,14 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps): JSX.Element {
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState(postsPagination.next_page);
+  console.log(postsPagination.next_page, posts);
 
   async function handleLoadMorePosts(): Promise<void> {
     if (nextPage) {
       const updatedPosts = [...posts];
-      const { next_page } = postsPagination;
-      const response = await fetch(next_page);
+      const response = await fetch(nextPage);
       const newPosts = await response.json();
+      console.log(newPosts);
 
       if (newPosts.results.length) {
         updatedPosts.push(...newPosts.results);
@@ -98,7 +99,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient();
   const postsResponse = await prismic.query(
     [Prismic.Predicates.at('document.type', 'post')],
-    { fetch: [], pageSize: 1 }
+    { fetch: [], pageSize: 4 }
   );
 
   const posts = postsResponse.results.map(post => {
